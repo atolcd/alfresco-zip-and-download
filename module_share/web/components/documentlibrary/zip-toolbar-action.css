@@ -1,0 +1,45 @@
+/**
+ * Copyright (C) 2011 Atol Conseils et Développements.
+ * http://www.atolcd.com/
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+**/
+
+.toolbar .onActionZip
+{
+   background-image: url(../images/zipcontents-16.png);
+}
+
+.filename-container {
+  padding: 10px;
+}
+
+.filename-container input {
+  width: 220px;
+}
+
+.checkbox-noaccent-container {
+  padding: 0 10px 5px;
+  text-align: justify;
+}
+
+.checkbox-noaccent-container input {
+  vertical-align: middle;
+}
+
+.checkbox-noaccent-container label {
+  font-style: italic;
+  margin-left: 5px;
+  vertical-align: middle;
+}
