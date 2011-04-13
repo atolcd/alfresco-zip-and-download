@@ -1,0 +1,14 @@
+== Installing JARs for Alfresco 3.4 ==
+
+1. Stop Alfresco
+   a. Run alfresco.sh stop (or alf_stop.bat)
+
+
+2. Copy JAR files
+   a. Copy "share-zip-contents-action.jar" into the "/tomcat/shared/lib/" folder of your Alfresco.
+
+   b. Copy "zip-contents-alfresco-webscript.jar" into the "/tomcat/webapps/alfresco/WEB-INF/lib/" folder of your Alfresco.
+
+
+4. Start Alfresco
+   a. Run alfresco.sh start (or alf_start.bat)

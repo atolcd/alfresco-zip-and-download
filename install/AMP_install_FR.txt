@@ -1,0 +1,18 @@
+== Installer les modules AMP sur Alfresco 3.4 ==
+
+1. Arrêter Alfresco
+   a. Executer la commande alfresco.sh stop (ou alf_stop.bat selon si vous êtes sous Linux ou Windows)
+
+
+2. Copier les fichiers AMP
+   a. Copier le fichier "zip-contents-alfresco-module.amp"  dans le répertoire "amps/" se situant à la racine de votre Alfresco
+
+   b. Copier le fichier "zip-contents-share-module.amp"  dans le répertoire "amps-share/" se situant à la racine de votre Alfresco
+
+
+3. Installer les modules AMP
+   a. Executer le script apply_amps.sh (ou apply_amps.bat selon si vous êtes sous Linux ou Windows)
+
+
+4. Lancer votre Alfresco
+   a. Executer la commande alfresco.sh start (ou alf_start.bat selon si vous êtes sous Linux ou Windows)
