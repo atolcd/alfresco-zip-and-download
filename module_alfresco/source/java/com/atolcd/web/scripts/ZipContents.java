@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Atol Conseils et Développements.
+ * Copyright (C) 2011 Atol Conseils et DÃ©veloppements.
  * http://www.atolcd.com/
  *
  * This program is free software: you can redistribute it and/or modify
@@ -129,7 +129,7 @@ public class ZipContents extends AbstractWebScript {
 
 			createZipFile(nodeIds, res.getOutputStream(), new Boolean(noaccentStr));
 		} catch (RuntimeException e) {
-			throw new WebScriptException(HttpServletResponse.SC_BAD_REQUEST, "Erreur lors de la génération de l'archive.");
+			throw new WebScriptException(HttpServletResponse.SC_BAD_REQUEST, "Erreur lors de la gÃ©nÃ©ration de l'archive.");
 		}
 	}
 
@@ -213,22 +213,28 @@ public class ZipContents extends AbstractWebScript {
 				logger.warn("Could not read : "	+ nodeName + "content");
 			}
 		}
-		else if(this.dictionaryService.isSubClass(nodeQnameType, ContentModel.TYPE_FOLDER)) {
-			List<ChildAssociationRef> children = nodeService.getChildAssocs(node);
+		else if(this.dictionaryService.isSubClass(nodeQnameType, ContentModel.TYPE_FOLDER) 
+				&& !this.dictionaryService.isSubClass(nodeQnameType, ContentModel.TYPE_SYSTEM_FOLDER)) {
+			out.putNextEntry(new ZipEntry(path + '/' + nodeName + '/'));
+			
+			List<ChildAssociationRef> children = nodeService
+					.getChildAssocs(node);
 			for (ChildAssociationRef childAssoc : children) {
 				NodeRef childNodeRef = childAssoc.getChildRef();
 
-				addToZip(childNodeRef, out, noaccent, path.isEmpty() ? nodeName : path + '/' + nodeName);
+				addToZip(childNodeRef, out, noaccent, path.isEmpty() ? nodeName
+						: path + '/' + nodeName);
 			}
-		}
-		else {
-			logger.info("Unmanaged type: "	+ nodeQnameType.getPrefixedQName(this.namespaceService) + ", filename: " + nodeName);
+		} else {
+			logger.info("Unmanaged type: "
+					+ nodeQnameType.getPrefixedQName(this.namespaceService)
+					+ ", filename: " + nodeName);
 		}
 	}
 
 	/**
-	 * ZipEntry() does not convert filenames from Unicode to platform (waiting Java 7)
-	 * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4244499
+	 * ZipEntry() does not convert filenames from Unicode to platform (waiting
+	 * Java 7) http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4244499
 	 * 
 	 * @param s
 	 * @return
