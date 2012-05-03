@@ -3,7 +3,7 @@
   <property name="module.id" value="zip-contents-alfresco-module"/>
 
   <!-- Path to the SDK -->
-  <property name="alfresco.lib.dir" value="../../alfresco-enterprise-sdk-3.4.0/lib"/>
+  <property name="alfresco.lib.dir" value="../../alfresco-enterprise-sdk-4.0.0/lib"/>
 
   <property name="project.dir" value="."/>
   <property name="build.dir" value="${project.dir}/build"/>

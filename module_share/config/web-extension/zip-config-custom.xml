@@ -1,0 +1,12 @@
+<alfresco-config>
+
+  <!-- Document Library Custom Code config section -->
+  <config evaluator="string-compare" condition="DocLibCustom">
+    <dependencies>
+      <!-- zip action -->
+      <css src="/components/documentlibrary/zip-toolbar-action.css" />
+      <js src="/components/documentlibrary/zip-toolbar-action-min.js" />
+    </dependencies>
+  </config>
+
+</alfresco-config>

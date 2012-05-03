@@ -1,4 +1,4 @@
-== Installer les modules sur Alfresco 3.4 ==
+== Installer les modules sur Alfresco 4 ==
 
 1. Arrêter Alfresco
    a. Executer la commande alfresco.sh stop (ou alf_stop.bat selon si vous êtes sous Linux ou Windows)

@@ -17,7 +17,7 @@
 
 
   <!-- Alfresco module directories -->
-  <property name="alfresco.lib.dir" value="../alfresco-enterprise-sdk-3.4.0/lib"/> <!-- Path to the SDK -->
+  <property name="alfresco.lib.dir" value="../alfresco-enterprise-sdk-4.0.0/lib"/> <!-- Path to the SDK -->
   <property name="alfresco.config.dir" value="${alfresco.module.dir}/config" />
   <property name="alfresco.webscripts.dir" value="${alfresco.module.dir}/source/webscripts" />
   <property name="alfresco.java.dir" value="${alfresco.module.dir}/source/java" />

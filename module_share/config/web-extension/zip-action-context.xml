@@ -2,7 +2,7 @@
 <!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
 
 <!--
- * Copyright (C) 2011 Atol Conseils et Développements.
+ * Copyright (C) 2012 Atol Conseils et Développements.
  * http://www.atolcd.com/
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,15 @@
          <list>
             <value>alfresco.messages.zip</value>
          </list>
+      </property>
+   </bean>
+
+   <bean id="zip.config.bootstrap" class="org.springframework.extensions.config.ConfigBootstrap" init-method="register" depends-on="webframework.configsource">
+      <property name="configService" ref="web.config" />
+      <property name="configs">
+        <list>
+          <value>classpath:alfresco/web-extension/zip-config-custom.xml</value>
+        </list>
       </property>
    </bean>
 
