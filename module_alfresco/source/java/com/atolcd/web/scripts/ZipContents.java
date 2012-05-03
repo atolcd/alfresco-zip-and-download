@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Atol Conseils et DÃ©veloppements.
+ * Copyright (C) 2011 Atol Conseils et Développements.
  * http://www.atolcd.com/
  *
  * This program is free software: you can redistribute it and/or modify
@@ -129,7 +129,7 @@ public class ZipContents extends AbstractWebScript {
 
 			createZipFile(nodeIds, res.getOutputStream(), new Boolean(noaccentStr));
 		} catch (RuntimeException e) {
-			throw new WebScriptException(HttpServletResponse.SC_BAD_REQUEST, "Erreur lors de la gÃ©nÃ©ration de l'archive.");
+			throw new WebScriptException(HttpServletResponse.SC_BAD_REQUEST, "Erreur lors de la génération de l'archive.");
 		}
 	}
 
@@ -215,8 +215,6 @@ public class ZipContents extends AbstractWebScript {
 		}
 		else if(this.dictionaryService.isSubClass(nodeQnameType, ContentModel.TYPE_FOLDER) 
 				&& !this.dictionaryService.isSubClass(nodeQnameType, ContentModel.TYPE_SYSTEM_FOLDER)) {
-			out.putNextEntry(new ZipEntry(path + '/' + nodeName + '/'));
-			
 			List<ChildAssociationRef> children = nodeService
 					.getChildAssocs(node);
 			for (ChildAssociationRef childAssoc : children) {
