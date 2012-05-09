@@ -217,11 +217,16 @@ public class ZipContents extends AbstractWebScript {
 				&& !this.dictionaryService.isSubClass(nodeQnameType, ContentModel.TYPE_SYSTEM_FOLDER)) {
 			List<ChildAssociationRef> children = nodeService
 					.getChildAssocs(node);
-			for (ChildAssociationRef childAssoc : children) {
-				NodeRef childNodeRef = childAssoc.getChildRef();
+			if (children.isEmpty()) {
+				String folderPath = path.isEmpty() ? nodeName + '/' : path + '/' + nodeName + '/';
+				out.putNextEntry(new ZipEntry(folderPath));
+			} else {
+				for (ChildAssociationRef childAssoc : children) {
+					NodeRef childNodeRef = childAssoc.getChildRef();
 
-				addToZip(childNodeRef, out, noaccent, path.isEmpty() ? nodeName
-						: path + '/' + nodeName);
+					addToZip(childNodeRef, out, noaccent,
+							path.isEmpty() ? nodeName : path + '/' + nodeName);
+				}
 			}
 		} else {
 			logger.info("Unmanaged type: "
