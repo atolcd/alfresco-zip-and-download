@@ -10,5 +10,5 @@
    b. Copier le fichier "zip-contents-alfresco-webscript.jar" dans le répertoire "/tomcat/webapps/alfresco/WEB-INF/lib/" de votre Alfresco.
 
 
-4. Lancer votre Alfresco
+3. Lancer votre Alfresco
    a. Executer la commande alfresco.sh start (ou alf_start.bat selon si vous êtes sous Linux ou Windows)

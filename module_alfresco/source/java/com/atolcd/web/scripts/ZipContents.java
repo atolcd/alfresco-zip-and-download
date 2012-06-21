@@ -37,6 +37,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.alfresco.model.ApplicationModel;
 import org.alfresco.model.ContentModel;
 import org.alfresco.service.cmr.dictionary.DictionaryService;
 import org.alfresco.service.cmr.repository.ChildAssociationRef;
@@ -151,6 +152,7 @@ public class ZipContents extends AbstractWebScript {
 						addToZip(node, out, noaccent, "");
 					}
 				} catch (Exception e) {
+					logger.debug(e);
 					throw new WebScriptException(
 							HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 				} finally {
@@ -180,8 +182,24 @@ public class ZipContents extends AbstractWebScript {
 
 	public void addToZip(NodeRef node, ZipOutputStream out, boolean noaccent, String path) throws IOException {
 		QName nodeQnameType = this.nodeService.getType(node);
-		String nodeName = (String) nodeService.getProperty(node, ContentModel.PROP_NAME);
 
+		// Special case : links
+		if (this.dictionaryService.isSubClass(nodeQnameType, ApplicationModel.TYPE_FILELINK)) {
+			NodeRef linkDestinationNode = (NodeRef) nodeService.getProperty(node, ContentModel.PROP_LINK_DESTINATION);
+			if (linkDestinationNode == null) {
+				return;
+			}
+
+			// Duplicate entry: check if link is not in the same space of the link destination
+			if (nodeService.getPrimaryParent(node).getParentRef().equals(nodeService.getPrimaryParent(linkDestinationNode).getParentRef())) {
+				return;
+			}
+
+			nodeQnameType = this.nodeService.getType(linkDestinationNode);
+			node = linkDestinationNode;
+		}
+
+		String nodeName = (String) nodeService.getProperty(node, ContentModel.PROP_NAME);
 		nodeName = noaccent ? unAccent(nodeName) : nodeName;
 
 		if (this.dictionaryService.isSubClass(nodeQnameType, ContentModel.TYPE_CONTENT)) {
