@@ -9,4 +9,27 @@
     </dependencies>
   </config>
 
+  <!-- Document Library Actions config section -->
+  <config evaluator="string-compare" condition="DocLibActions">
+    <!-- Action definition -->
+    <actions>
+      <!-- Zip folder -->
+      <action id="zip-folder" type="javascript" label="menu.selected-items.zip-content">
+        <param name="function">onActionZip</param>
+      </action>
+    </actions>
+
+    <actionGroups>
+      <!-- DocumentLibrary: zip folder action -->
+      <actionGroup id="folder-browse">
+        <action index="230" id="zip-folder" icon="zipcontents" label="menu.selected-items.zip-content" />
+      </actionGroup>
+
+      <!-- Folder details parge: zip folder action -->
+      <actionGroup id="folder-details">
+        <action index="230" id="zip-folder" icon="zipcontents" label="menu.selected-items.zip-content" />
+      </actionGroup>
+    </actionGroups>
+  </config>
+
 </alfresco-config>

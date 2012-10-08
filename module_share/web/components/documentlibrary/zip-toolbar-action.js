@@ -32,8 +32,12 @@
       };
 
       var nodesRef = [];
-      for (var i=0, ii=record.length ; i<ii ; i++){
-        nodesRef.push(getNodeId(record[i].nodeRef));
+      if (record instanceof Array) {
+        for (var i=0, ii=record.length ; i<ii ; i++){
+          nodesRef.push(getNodeId(record[i].nodeRef));
+        }
+      } else {
+        nodesRef.push(getNodeId(record.nodeRef))
       }
 
       // Download Simple Dialog

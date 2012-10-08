@@ -64,7 +64,7 @@ public class ZipContents extends AbstractWebScript {
 	private static final int BUFFER_SIZE = 1024;
 
 	private static final String MIMETYPE_ZIP = "application/zip";
-	private static final String DEFAULT_FILENAME = "archive";
+	private static final String TEMP_FILE_PREFIX = "alf";
 	private static final String ZIP_EXTENSION = ".zip";
 
 	private ContentService contentService;
@@ -135,10 +135,11 @@ public class ZipContents extends AbstractWebScript {
 	}
 
 	public void createZipFile(List<String> nodeIds, OutputStream os, boolean noaccent) throws IOException {
+		File zip = null;
 
 		try {
 			if (nodeIds != null && !nodeIds.isEmpty()) {
-				File zip = TempFileProvider.createTempFile(DEFAULT_FILENAME, ZIP_EXTENSION);
+				zip = TempFileProvider.createTempFile(TEMP_FILE_PREFIX, ZIP_EXTENSION);
 				FileOutputStream stream = new FileOutputStream(zip);
 				CheckedOutputStream checksum = new CheckedOutputStream(stream, new Adler32());
 				BufferedOutputStream buff = new BufferedOutputStream(checksum);
@@ -171,12 +172,16 @@ public class ZipContents extends AbstractWebScript {
 							os.write(buffer, 0, len);
 						}
 					}
-
-					zip.delete();
 				}
 			}
 		} catch (Exception e) {
 			throw new WebScriptException(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		}
+		finally {
+			// try and delete the temporary file
+			if (zip != null) {
+				zip.delete();
+			}
 		}
 	}
 
