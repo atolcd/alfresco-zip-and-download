@@ -1,11 +1,7 @@
 ﻿<project name="Share Action" default="dist-jar" basedir=".">
+  <property file="build.properties" />
 
   <!-- Properties -->
-
-  <!-- JAR names -->
-  <property name="jar.dist.file.name" value="share-zip-contents-action.jar" />
-  <property name="jar.alfresco.file.name" value="zip-contents-alfresco-webscript.jar" />
-
   <!-- build and distribution directories -->
   <property name="dist.dir" value="${basedir}/dist" />
   <property name="build.dir" value="${basedir}/build" />
@@ -17,7 +13,6 @@
 
 
   <!-- Alfresco module directories -->
-  <property name="alfresco.lib.dir" value="../alfresco-enterprise-sdk-4.0.0/lib"/> <!-- Path to the SDK -->
   <property name="alfresco.config.dir" value="${alfresco.module.dir}/config" />
   <property name="alfresco.webscripts.dir" value="${alfresco.module.dir}/source/webscripts" />
   <property name="alfresco.java.dir" value="${alfresco.module.dir}/source/java" />
@@ -26,8 +21,6 @@
   <property name="share.web.dir" value="${share.module.dir}/web" />
   <property name="share.config.dir" value="${share.module.dir}/config" />
   <property name="share.lib.dir" value="${share.module.dir}/lib" />
-
-
 
 
   <!-- Clean out the build and distribution directories -->
@@ -67,7 +60,7 @@
     </jar>
   </target>
 
-<!--                                    -->
+  <!--                                    -->
 
 
   <!--                                        -->
@@ -103,18 +96,18 @@
     <!--
       Alfresco
     -->
-    <!-- webscripts -->
+    <!-- Webscripts -->
     <mkdir dir="${build.jar.dir}" />
     <copy todir="${build.jar.dir}/alfresco/extension/templates/webscripts" includeEmptyDirs="false">
       <fileset dir="${alfresco.webscripts.dir}" includes="**/*.*" excludes="" />
     </copy>
 
-    <!-- spring configuration -->
+    <!-- Spring configuration -->
     <copy todir="${build.jar.dir}/alfresco/extension" includeEmptyDirs="false">
       <fileset dir="${alfresco.config.dir}" includes="**/*.xml" excludes="" />
     </copy>
 
-    <!-- java class
+    <!-- Java class
     <copy todir="${build.jar.dir}" includeEmptyDirs="false">
       <fileset dir="${build.dir}/classes" includes="**/*.*" excludes="" />
     </copy>
@@ -123,22 +116,22 @@
     <!--
       Share
     -->
-    <!-- share config (web-extension, messages) -->
+    <!-- Share config (web-extension, messages) -->
     <copy todir="${build.jar.dir}/alfresco" includeEmptyDirs="false">
       <fileset dir="${share.config.dir}" includes="**/*.*" excludes="site-webscripts/**" />
     </copy>
 
-    <!-- share site-webscripts -->
+    <!-- Share site-webscripts -->
     <copy todir="${build.jar.dir}/alfresco/web-extension/site-webscripts" includeEmptyDirs="false">
       <fileset dir="${share.config.dir}/site-webscripts" includes="**/*.*" excludes="" />
     </copy>
 
-    <!-- minify JS -->
+    <!-- Minify JS -->
     <yuicompress fromdir="${share.web.dir}" todir="${share.web.dir}" excludes="**/*-min.js" warn="yuicompress.warn">
       <include name="**/*.js" />
     </yuicompress>
 
-    <!-- share resource files (javascript files, css, images) -->
+    <!-- Share resource files (javascript files, css, images) -->
     <mkdir dir="${build.jar.dir}/META-INF" />
     <copy todir="${build.jar.dir}/META-INF" includeEmptyDirs="false">
       <fileset dir="${share.web.dir}" includes="**/*.*" />
@@ -148,11 +141,26 @@
     <antcall target="clean.js.minify" />
   </target>
 
-  <!-- Build a JAR file containing configuration and resource files -->
-  <target name="dist-jar" depends="clean, prepare, package-alfresco-jar, build-jar">
+  <!-- Build JAR files containing configuration and resource files -->
+  <target name="dist-jar" depends="clean, prepare, package-alfresco-jar, build-jar" description="Build JAR files">
     <jar destfile="${dist.dir}/${jar.dist.file.name}">
       <fileset dir="${build.jar.dir}" />
     </jar>
+
+    <delete dir="${build.dir}" />
+  </target>
+
+  <!-- Build AMP files containing configuration and resource files -->
+  <target name="dist-amp" depends="clean, prepare" description="Build AMP modules">
+    <ant antfile="build.xml" dir="${basedir}/module_alfresco" target="build-amp" inheritrefs="true">
+      <property name="dist.dir" value="../dist"/>
+      <property file="${basedir}/build.properties"/>
+    </ant>
+    <ant antfile="build.xml" dir="${basedir}/module_share" target="build-amp">
+      <property name="dist.dir" value="../dist"/>
+    </ant>
+
+    <delete dir="${build.dir}" />
   </target>
 
 </project>

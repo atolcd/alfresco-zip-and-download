@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<project name="AMP Build File" default="prepare-package-amp" basedir=".">
-  <property name="module.id" value="zip-contents-share-module"/>
+<project name="AMP Build File" default="dist-amp" basedir=".">
+  <property file="module.properties" />
 
   <property name="project.dir" value="."/>
   <property name="dist.dir" value="${project.dir}/dist"/>
-  <property name="amp.file" value="${dist.dir}/${module.id}.amp"/>
+  <property name="amp.file" value="${dist.dir}/${module.id}-v${module.version}.amp"/>
   <property name="web.dir" value="${project.dir}/web" />
 
   <!-- YUI compressor -->
@@ -31,7 +31,7 @@
   </target>
 
   <!-- Make Dirs -->
-  <target name="mkdirs" depends="clean">
+  <target name="prepare">
     <mkdir dir="${dist.dir}" />
   </target>
 
@@ -41,20 +41,15 @@
   </target>
 
   <!-- Package AMP for Share -->
-  <target name="prepare-package-amp" depends="mkdirs, add-web-to-package-amp, add-config-to-package-amp" description="Package the Module for Share" >
-    <zip destfile="${amp.file}" update="true">
-      <fileset dir="${project.dir}/" includes="*.properties" />
-    </zip>
-  </target>
-
-  <!-- Web -->
-  <target name="add-web-to-package-amp">
+  <target name="build-amp" description="Package the Module for Share" >
     <!-- Minify JS -->
     <yuicompress fromdir="${web.dir}" todir="${web.dir}" excludes="**/*-min.js" warn="yuicompress.warn">
       <include name="**/*.js" />
     </yuicompress>
 
     <zip destfile="${amp.file}" update="true">
+      <zipfileset dir="${project.dir}/" includes="*.properties" />
+      <zipfileset dir="${project.dir}/config" prefix="WEB-INF/classes/alfresco" />
       <zipfileset dir="${web.dir}" prefix="web" />
     </zip>
 
@@ -62,10 +57,5 @@
     <antcall target="clean.js.minify" />
   </target>
 
-  <!-- Webscripts -->
-  <target name="add-config-to-package-amp">
-    <zip destfile="${amp.file}" update="true">
-      <zipfileset dir="${project.dir}/config" prefix="WEB-INF/classes/alfresco" />
-    </zip>
-  </target>
+  <target name="dist-amp" depends="clean, prepare, build-amp" description="Build an AMP file" />
 </project>
