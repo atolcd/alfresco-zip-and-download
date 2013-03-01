@@ -17,6 +17,7 @@ Check out the project if you have not already done so
         git clone git://github.com/atolcd/alfresco-zip-and-download.git
 
 An Ant build script is provided to build AMP files **OR** JAR files containing the custom files.  
+Before building, ensure you have edited the `build.properties` file to set the path to your Alfresco SDK.  
 
 To build AMP files, run the following command from the base project directory:
 
@@ -61,4 +62,11 @@ Using the module
 
 LICENSE
 ---------------------
-This extension is licensed under `GNU Library or "Lesser" General Public License (LGPL)`.
+This extension is licensed under `GNU Library or "Lesser" General Public License (LGPL)`.  
+Created by: [Julien BERTHOUX] (https://github.com/jberthoux) and [Bertrand FOREST] (https://github.com/bforest)  
+
+
+Our company
+---------------------
+[Atol Conseils et Développements] (http://www.atolcd.com) is Alfresco [Gold Partner] (http://www.alfresco.com/partners/atol)  
+Follow us on twitter [ @atolcd] (https://twitter.com/atolcd)  
