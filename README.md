@@ -1,4 +1,4 @@
-"Download as ZIP" Share action
+"Download as ZIP" action for Alfresco Share
 ================================
 
 This extension allows you to add "Download as ZIP" action in Alfresco Share Document Library web tier (available in both Document Library site and repository).  
