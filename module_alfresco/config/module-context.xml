@@ -29,5 +29,7 @@
       <property name="storeUrl">
          <value>${spaces.store}</value>
       </property>
+
+      <property name="encoding" value="${zip.encoding}" />
    </bean>
 </beans>

@@ -33,7 +33,6 @@ import java.util.zip.Adler32;
 import java.util.zip.CheckedOutputStream;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -49,6 +48,9 @@ import org.alfresco.service.cmr.repository.StoreRef;
 import org.alfresco.service.namespace.NamespaceService;
 import org.alfresco.service.namespace.QName;
 import org.alfresco.util.TempFileProvider;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.extensions.webscripts.AbstractWebScript;
@@ -72,7 +74,7 @@ public class ZipContents extends AbstractWebScript {
 	private NamespaceService namespaceService;
 	private DictionaryService dictionaryService;
 	private StoreRef storeRef;
-
+	private String encoding;
 
 	public void setNodeService(NodeService nodeService) {
 		this.nodeService = nodeService;
@@ -92,6 +94,10 @@ public class ZipContents extends AbstractWebScript {
 
 	public void setStoreUrl(String url) {
 		this.storeRef = new StoreRef(url);
+	}
+
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
 	}
 
 	public void execute(WebScriptRequest req, WebScriptResponse res) throws IOException {
@@ -143,9 +149,14 @@ public class ZipContents extends AbstractWebScript {
 				FileOutputStream stream = new FileOutputStream(zip);
 				CheckedOutputStream checksum = new CheckedOutputStream(stream, new Adler32());
 				BufferedOutputStream buff = new BufferedOutputStream(checksum);
-				ZipOutputStream out = new ZipOutputStream(buff);
-				out.setMethod(ZipOutputStream.DEFLATED);
+				ZipArchiveOutputStream out = new ZipArchiveOutputStream(buff);
+				out.setEncoding(encoding);
+				out.setMethod(ZipArchiveOutputStream.DEFLATED);
 				out.setLevel(Deflater.BEST_COMPRESSION);
+				
+        if (logger.isDebugEnabled()) {
+          logger.debug("Using encoding '" + encoding + "' for zip file.");
+        }
 
 				try {
 					for (String nodeId : nodeIds) {
@@ -153,7 +164,7 @@ public class ZipContents extends AbstractWebScript {
 						addToZip(node, out, noaccent, "");
 					}
 				} catch (Exception e) {
-					logger.debug(e);
+					logger.error(e.getMessage(), e);
 					throw new WebScriptException(
 							HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 				} finally {
@@ -164,17 +175,21 @@ public class ZipContents extends AbstractWebScript {
 
 					if (nodeIds.size() > 0) {
 						InputStream in = new FileInputStream(zip);
+						try {
+						  byte[] buffer = new byte[BUFFER_SIZE];
+						  int len;
 
-						byte[] buffer = new byte[BUFFER_SIZE];
-						int len;
-
-						while ((len = in.read(buffer)) > 0) {
-							os.write(buffer, 0, len);
+						  while ((len = in.read(buffer)) > 0) {
+						    os.write(buffer, 0, len);
+						  }
+						} finally {
+						  IOUtils.closeQuietly(in);
 						}
 					}
 				}
 			}
 		} catch (Exception e) {
+		  logger.error(e.getMessage(), e);
 			throw new WebScriptException(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		}
 		finally {
@@ -185,7 +200,7 @@ public class ZipContents extends AbstractWebScript {
 		}
 	}
 
-	public void addToZip(NodeRef node, ZipOutputStream out, boolean noaccent, String path) throws IOException {
+	public void addToZip(NodeRef node, ZipArchiveOutputStream out, boolean noaccent, String path) throws IOException {
 		QName nodeQnameType = this.nodeService.getType(node);
 
 		// Special case : links
@@ -214,11 +229,11 @@ public class ZipContents extends AbstractWebScript {
 
 				String filename = path.isEmpty() ? nodeName : path + '/' + nodeName;
 
-				ZipEntry entry = new ZipEntry(filename);
+				ZipArchiveEntry entry = new ZipArchiveEntry(filename);
 				entry.setTime(((Date) nodeService.getProperty(node, ContentModel.PROP_MODIFIED)).getTime());
 
 				entry.setSize(reader.getSize());
-				out.putNextEntry(entry);
+				out.putArchiveEntry(entry);
 
 				byte buffer[] = new byte[BUFFER_SIZE];
 				while (true) {
@@ -230,7 +245,7 @@ public class ZipContents extends AbstractWebScript {
 					out.write(buffer, 0, nRead);
 				}
 				is.close();
-				out.closeEntry();
+				out.closeArchiveEntry();
 			}
 			else {
 				logger.warn("Could not read : "	+ nodeName + "content");
@@ -242,7 +257,7 @@ public class ZipContents extends AbstractWebScript {
 					.getChildAssocs(node);
 			if (children.isEmpty()) {
 				String folderPath = path.isEmpty() ? nodeName + '/' : path + '/' + nodeName + '/';
-				out.putNextEntry(new ZipEntry(folderPath));
+				out.putArchiveEntry(new ZipArchiveEntry(new ZipEntry(folderPath)));
 			} else {
 				for (ChildAssociationRef childAssoc : children) {
 					NodeRef childNodeRef = childAssoc.getChildRef();
