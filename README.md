@@ -65,6 +65,12 @@ LICENSE
 This extension is licensed under `GNU Library or "Lesser" General Public License (LGPL)`.  
 Created by: [Julien BERTHOUX] (https://github.com/jberthoux) and [Bertrand FOREST] (https://github.com/bforest)  
 
+Contributors:
+ - [oakman] (https://github.com/oakman): Added possibility to set zip file encoding in alfresco-global.properties
+ - [marsv024] (https://github.com/marsv024): Swedish translation
+ - [pnacci] (https://forums.alfresco.com/fr/user/9195/achievements): Links handling
+ - [pitzalis] (https://forums.alfresco.com/fr/user/11027/achievements): Italian translation
+
 
 Our company
 ---------------------
